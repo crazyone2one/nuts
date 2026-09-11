@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: nuts
+  profiles:
+    active: dev
+  jackson:
+    mapper:
+      default-view-inclusion: false
+  messages:
+    default-locale: zh_CN
+    basename: i18n/commons,i18n/api,i18n/bug,i18n/case,i18n/plan,i18n/project,i18n/system,i18n/dashboard

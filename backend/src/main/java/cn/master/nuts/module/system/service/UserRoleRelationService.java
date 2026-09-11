@@ -1,0 +1,14 @@
+package cn.master.nuts.module.system.service;
+
+import com.mybatisflex.core.service.IService;
+import cn.master.nuts.module.system.entity.UserRoleRelation;
+
+/**
+ * 用户组关系 服务层。
+ *
+ * @author 11's papa
+ * @since 2026-09-03
+ */
+public interface UserRoleRelationService extends IService<UserRoleRelation> {
+
+}
