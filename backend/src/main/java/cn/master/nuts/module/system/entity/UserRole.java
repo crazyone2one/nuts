@@ -1,5 +1,7 @@
 package cn.master.nuts.module.system.entity;
 
+import cn.master.nuts.handler.result.Views;
+import com.fasterxml.jackson.annotation.JsonView;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.Table;
@@ -36,12 +38,14 @@ public class UserRole implements Serializable {
      */
     @Id
     @Schema(description = "组ID")
+    @JsonView(Views.Internal.class)
     private String id;
 
     /**
      * 组名称
      */
     @Schema(description = "组名称")
+    @JsonView(Views.Internal.class)
     private String name;
 
     /**

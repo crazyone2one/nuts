@@ -1,5 +1,7 @@
 package cn.master.nuts.module.system.entity;
 
+import cn.master.nuts.handler.validation.Created;
+import cn.master.nuts.handler.validation.Updated;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.Table;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 import java.io.Serial;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,16 +42,14 @@ public class OperationLog implements Serializable {
     @Schema(description = "主键")
     private String id;
 
-    /**
-     * 项目id
-     */
-    @Schema(description = "项目id")
+    @Schema(description =  "项目id", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{operation_log.project_id.not_blank}", groups = {Created.class})
+    @Size(min = 1, max = 50, message = "{operation_log.project_id.length_range}", groups = {Created.class, Updated.class})
     private String projectId;
 
-    /**
-     * 组织id
-     */
-    @Schema(description = "组织id")
+    @Schema(description =  "组织id", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{operation_log.organization_id.not_blank}", groups = {Created.class})
+    @Size(min = 1, max = 50, message = "{operation_log.organization_id.length_range}", groups = {Created.class, Updated.class})
     private String organizationId;
 
     /**
@@ -69,16 +71,14 @@ public class OperationLog implements Serializable {
     @Schema(description = "资源id")
     private String sourceId;
 
-    /**
-     * 操作方法
-     */
-    @Schema(description = "操作方法")
+    @Schema(description = "操作方法", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{operation_log.method.not_blank}", groups = {Created.class})
+    @Size(min = 1, max = 255, message = "{operation_log.method.length_range}", groups = {Created.class, Updated.class})
     private String method;
 
-    /**
-     * 操作类型/add/update/delete
-     */
-    @Schema(description = "操作类型/add/update/delete")
+    @Schema(description =  "操作类型/add/update/delete", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{operation_log.type.not_blank}", groups = {Created.class})
+    @Size(min = 1, max = 20, message = "{operation_log.type.length_range}", groups = {Created.class, Updated.class})
     private String type;
 
     @Schema(description = "")

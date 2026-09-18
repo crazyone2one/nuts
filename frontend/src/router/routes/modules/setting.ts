@@ -33,6 +33,16 @@ const Setting: IAppRouteRecordRaw = {
                 isTopMenu: true,
             },
         },
+        {
+            path: 'project',
+            name: SettingRouteEnum.SETTING_SYSTEM_ORGANIZATION,
+            component: () => import('/@/views/setting/project/index.vue'),
+            meta: {
+                locale: '项目',
+                roles: ['SYSTEM_ORGANIZATION_PROJECT:READ'],
+                isTopMenu: true,
+            },
+        },
     ]
 }
 export default Setting;

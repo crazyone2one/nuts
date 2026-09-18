@@ -20,7 +20,7 @@ public class Codegen {
         dataSource.setPassword("123456");
 
         // 创建配置内容，两种风格都可以。
-        GlobalConfig globalConfig = createGlobalConfigUseStyle1("user_role_permission");
+        GlobalConfig globalConfig = createGlobalConfigUseStyle1("environment_group_relation");
         // GlobalConfig globalConfig = createGlobalConfigUseStyle2();
 
         // 通过 datasource 和 globalConfig 创建代码生成器
@@ -35,7 +35,7 @@ public class Codegen {
         GlobalConfig globalConfig = new GlobalConfig();
         globalConfig.getJavadocConfig().setAuthor("11's papa");
         // 设置根包
-        globalConfig.setBasePackage("cn.master.nuts.module.system");
+        globalConfig.setBasePackage("cn.master.nuts.module.project");
         globalConfig.setSourceDir(System.getProperty("user.dir") + "/backend/src/main/java");
         // 设置表前缀和只生成哪些表
         globalConfig.setTablePrefix("tb_");

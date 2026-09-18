@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 
 @SpringBootApplication
-@MapperScan("cn.master.nuts.module.system.mapper")
+@MapperScan("cn.master.nuts.module.*.mapper")
 @EnableConfigurationProperties({JwtProperties.class})
 public class NutsApplication {
 

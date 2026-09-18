@@ -1,6 +1,7 @@
 export interface PageQuery<T = Record<string, any>> {
     page: number;
     pageSize: number;
+    keyword?: string;
     filter?: Partial<T>
 }
 

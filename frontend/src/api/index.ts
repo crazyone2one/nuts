@@ -36,6 +36,7 @@ export const instance = createAlova({
 
             const json = await response.json();
             if (response.status >= 400) {
+                window.$message.error(json?.message || '系统错误')
                 throw new Error(response.statusText);
             }
             if (json?.code !== RESPONSE_CODE.OK) {

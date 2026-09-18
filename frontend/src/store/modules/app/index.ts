@@ -1,7 +1,7 @@
-
 import type {RouteRecordRaw} from "vue-router";
 import type {IAppState} from "/@/store/modules/app/types.ts";
 import {cloneDeep} from "lodash-es";
+import {projectApi} from "/@/api/methods/project.ts";
 
 const useAppStore = defineStore('app', {
     state: (): IAppState => ({
@@ -70,6 +70,14 @@ const useAppStore = defineStore('app', {
         setCurrentProjectId(id: string) {
             this.currentProjectId = id;
         },
+        async initProjectList() {
+            if (this.currentOrgId) {
+                const res = await projectApi.getProjectList(this.getCurrentOrgId);
+                this.projectList = res;
+            } else {
+                this.projectList = []
+            }
+        }
     },
     persist: {
         pick: ['currentOrgId', 'currentProjectId', 'menuCollapse', 'isDarkTheme'],

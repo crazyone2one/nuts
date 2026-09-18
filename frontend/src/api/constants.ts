@@ -21,3 +21,5 @@ export class BusinessError extends Error {
         this.code = code;
     }
 }
+
+export const OrgOption = [{value: '100001', label: '默认Org'}];

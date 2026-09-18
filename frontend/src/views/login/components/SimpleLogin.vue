@@ -5,6 +5,7 @@ import {authApi} from "/@/api/methods/auth.ts";
 import type {FormInst} from "naive-ui";
 import {useAppStore, useUserStore} from "/@/store";
 import {getFirstRouteNameByPermission, routerNameHasPermission} from "/@/utils/permission.ts";
+import {tokenManager} from "/@/utils/token.ts";
 
 const appStore = useAppStore();
 const userStore = useUserStore();
@@ -43,7 +44,7 @@ const handleLogin = () => {
           });
         })
       } catch (err) {
-        localStorage.removeItem('accessToken')
+        tokenManager.clear()
         throw err;
       }
     }

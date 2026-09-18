@@ -23,6 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = QueryChain.of(User.class).where(User::getName).eq(username).oneOpt()
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
         List<org.springframework.security.core.GrantedAuthority> authorities = new ArrayList<>();
-        return new org.springframework.security.core.userdetails.User(user.getName(), user.getPassword(), authorities);
+        return new CustomUserPrincipal(user, authorities);
     }
 }

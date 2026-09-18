@@ -12,7 +12,9 @@ const appStore = useAppStore();
     <n-layout has-sider position="absolute" style="top: 64px;" :style="`bottom: ${appStore.showFooter ? 64 : 0}px;`">
       <sider-menu/>
       <n-layout-content content-style="padding: 24px;" :native-scrollbar="false">
-        <router-view/>
+        <n-spin size="large" :show="appStore.loading" :description="appStore.loadingTip">
+          <router-view/>
+        </n-spin>
       </n-layout-content>
     </n-layout>
     <n-layout-footer v-if="appStore.showFooter" bordered position="absolute" style="height: 64px; padding: 24px">

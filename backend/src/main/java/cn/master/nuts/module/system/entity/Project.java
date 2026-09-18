@@ -1,18 +1,21 @@
 package cn.master.nuts.module.system.entity;
 
+import cn.master.nuts.handler.validation.Created;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.Table;
-import java.io.Serializable;
-import java.time.LocalDateTime;
-
-import java.io.Serial;
-
+import com.mybatisflex.core.handler.JacksonTypeHandler;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serial;
+import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.util.List;
 
 /**
  * 项目 实体类。
@@ -42,7 +45,7 @@ public class Project implements Serializable {
      * 项目编号
      */
     @Schema(description = "项目编号")
-    private Long num;
+    private String num;
 
     /**
      * 组织ID
@@ -115,7 +118,9 @@ public class Project implements Serializable {
     /**
      * 模块设置
      */
+    @Column(typeHandler = JacksonTypeHandler.class)
     @Schema(description = "模块设置")
-    private String moduleSetting;
-
+    private List<String> moduleSetting;
+    @NotNull(message = "{project.all_resource_pool.not_blank}", groups = {Created.class})
+    private Boolean allResourcePool;
 }
