@@ -91,7 +91,7 @@ const useProjectEnvStore = defineStore('projectEnv', () => {
 
     async function copyCurrentEnv(copyId: string) {
         try {
-            const tmpObj = await envManagementAPi.getDetailEnv(copyId);
+            const tmpObj = await envManagementAPi.getDetailEnv(copyId).send(true);
             currentEnvDetailInfo.value = {...tmpObj};
             currentEnvDetailInfo.value.id = '';
             let copyName = `copy_${currentEnvDetailInfo.value.name}`;
@@ -122,7 +122,7 @@ const useProjectEnvStore = defineStore('projectEnv', () => {
                     config: cloneDeep(envParamsDefaultConfig),
                 };
             } else if (id === ALL_PARAM) {
-                const res = await envManagementAPi.getGlobalParamDetail(appStore.currentProjectId);
+                const res = await envManagementAPi.getGlobalParamDetail(appStore.currentProjectId).send(true);
                 allParamDetailInfo.value = cloneDeep(res || defaultAllParams);
                 await nextTick(() => {
                     backupAllParamDetailInfo.value = cloneDeep(allParamDetailInfo.value);
@@ -130,7 +130,7 @@ const useProjectEnvStore = defineStore('projectEnv', () => {
             } else if (id === NEW_ENV_PARAM_COPY && copyId) {
                 await copyCurrentEnv(copyId);
             } else if (id && id !== ALL_PARAM && id !== NEW_ENV_PARAM_COPY) {
-                const tmpObj = await envManagementAPi.getDetailEnv(id);
+                const tmpObj = await envManagementAPi.getDetailEnv(id).send(true);
                 currentEnvDetailInfo.value = {...tmpObj};
                 setDetailInfo(currentEnvDetailInfo.value);
             }

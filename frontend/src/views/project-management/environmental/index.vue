@@ -135,12 +135,12 @@ onMounted(() => {
         <div class="mr-[6px] p-[16px]">
           <template v-if="showType === 'PROJECT'">
             <n-input v-model:value="keyword" placeholder="请输入环境名称" clearable/>
-            <div class="p-[8px] text-[var(--color-text-4)]">
-              全局请求
-            </div>
-            <div class="flex items-center justify-between">
-              请求头
-            </div>
+<!--            <div class="p-[8px] text-[var(&#45;&#45;color-text-4)]">-->
+<!--              全局请求-->
+<!--            </div>-->
+<!--            <div class="flex items-center justify-between">-->
+<!--              请求头-->
+<!--            </div>-->
             <n-divider/>
             <div class="env-row p-[8px]">
               <div>环境</div>
