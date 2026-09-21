@@ -3,20 +3,33 @@
 import {useRequest} from "alova/client";
 import {projectTaskApi} from "/@/api/methods/task-center/project.ts";
 import type {TaskParameterItem} from "/@/types/task-center.ts";
+import ShowOrEdit from "/@/components/ShowOrEdit.vue";
+import {type DataTableColumns, NButton, NInputNumber, NSelect, NSwitch} from "naive-ui";
 
 const active = defineModel<boolean>('active')
 const props = defineProps<{ id: string }>()
 const parameters = ref<TaskParameterItem[]>([]);
+const editingIndex = ref<number | null>(null);
 const {send: fetchTaskParam} = useRequest(id => projectTaskApi.projectGetScheduleParam(id), {immediate: false})
 const getTaskParam = (id: string) => {
   fetchTaskParam(id).then(response => {
     parameters.value = Object.values(response.config?.parameters ?? {});
   })
 }
-const addParameter = () => parameters.value.push({
-  label: '', key: '', type: 'string', value: '', enabled: true
-});
-const removeParameter = (index: number) => parameters.value.splice(index, 1);
+const addParameter = () => {
+  parameters.value.push({
+    label: '', key: '', type: 'string', value: '', enabled: true
+  });
+  editingIndex.value = parameters.value.length - 1;
+};
+const removeParameter = (index: number) => {
+  parameters.value.splice(index, 1);
+  if (editingIndex.value === index) {
+    editingIndex.value = null;
+  } else if (editingIndex.value !== null && editingIndex.value > index) {
+    editingIndex.value -= 1;
+  }
+};
 const normalizeValue = (item: TaskParameterItem) => {
   if (item.type === 'string') item.value = String(item.value ?? '');
   if (item.type === 'number') item.value = Number(item.value);
@@ -34,11 +47,98 @@ const handleSave = async () => {
   window.$message.success('保存成功');
   active.value = false;
 }
+const columns: DataTableColumns<TaskParameterItem> = [
+  {
+    title: '参数名称', key: 'label', render(record, index) {
+      return h(ShowOrEdit, {
+        value: record.label, isEdit: editingIndex.value === index,
+        onUpdateValue: (value) => {
+          record.label = value;
+        }, size: 'small'
+      });
+    }
+  },
+  {
+    title: '参数 key', key: 'key', render(record, index) {
+      return h(ShowOrEdit, {
+        value: record.key, isEdit: editingIndex.value === index,
+        onUpdateValue: (value) => {
+          record.key = value;
+        }, size: 'small'
+      });
+    }
+  },
+  {
+    title: '参数类型', key: 'type', render(record) {
+      return h(NSelect, {
+        value: record.type,
+        options: [
+          {label: 'String', value: 'string'},
+          {label: 'Number', value: 'number'},
+          {label: 'Boolean', value: 'boolean'}
+        ],
+        onUpdateValue: (value) => {
+          record.type = value;
+          normalizeValue(record);
+        },
+        size: 'small'
+      });
+    }
+  },
+  {
+    title: '参数值', key: 'value', render(record, index) {
+      if (record.type === 'string') {
+        return h(ShowOrEdit, {
+          value: String(record.value),
+          isEdit: editingIndex.value === index,
+          onUpdateValue: (value) => {
+            record.value = value;
+          },
+          size: 'small'
+        });
+      }
+      if (record.type === 'number') {
+        return h(NInputNumber, {
+          value: typeof record.value === 'number' ? record.value : null,
+          placeholder: '值',
+          onUpdateValue: (value) => {
+            record.value = value ?? 0;
+          },
+          size: 'small'
+        });
+      }
+      if (record.type === 'boolean') {
+        return h(NSwitch, {
+          value: record.value === true,
+          onUpdateValue: (value) => {
+            record.value = value;
+          },
+          size: 'small'
+        });
+      }
+    }
+  },
+  {
+    title: '是否生效', key: 'enabled', render(record) {
+      return h(NSwitch, {
+        value: record.enabled, onUpdateValue: (value) => {
+          record.enabled = value;
+        },
+        size: 'small'
+      })
+    }
+  },
+  {
+    title: '操作', key: 'operation', render(_, index) {
+      return h(NButton, {onClick: () => removeParameter(index), size: 'small'}, {default: () => '删除'})
+    }
+  }
+]
 watch(() => props.id, (newValue) => {
   if (newValue) {
     getTaskParam(newValue)
   }
-})
+}, {deep: true})
 </script>
 
 <template>
@@ -49,38 +149,13 @@ watch(() => props.id, (newValue) => {
       </template>
       <div>
         <n-button secondary class="mb-[16px]" @click="addParameter">添加参数</n-button>
-        <n-flex v-for="(item, index) in parameters" :key="`${item.key}-${index}`">
-          <div>
-            <n-input v-model:value="item.label" class="w-[90px]" placeholder="名称" size="small"/>
-          </div>
-          <div>
-            <n-input v-model:value="item.key" class="w-[90px]" placeholder="key" size="small"/>
-          </div>
-          <n-select v-model:value="item.type" class="w-[110px]" size="small"
-                    :options="[
-                      {label: 'String', value: 'string'},
-                      {label: 'Number', value: 'number'},
-                      {label: 'Boolean', value: 'boolean'}
-                    ]" @update:value="normalizeValue(item)"/>
-          <div>
-            <n-input v-if="item.type === 'string'" :value="String(item.value)" size="small"
-                     class="grow" placeholder="值" @update:value="item.value = $event"/>
-            <n-input-number v-else-if="item.type === 'number'" size="small"
-                            :value="typeof item.value === 'number' ? item.value : null"
-                            class="grow" placeholder="值"
-                            @update:value="item.value = $event ?? 0"/>
-            <n-switch v-else size="small" :value="item.value === true"
-                      @update:value="item.value = $event"/>
-          </div>
-          <n-switch v-model:value="item.enabled" size="small"/>
-          <div>
-            <n-button quaternary type="error" @click="removeParameter(index)">删除</n-button>
-          </div>
-        </n-flex>
+        <n-data-table :columns="columns" :data="parameters"/>
       </div>
       <template #footer>
-        <n-button secondary @click="handleCancel">取消</n-button>
-        <n-button type="primary" @click="handleSave">保存</n-button>
+        <n-flex>
+          <n-button secondary @click="handleCancel">取消</n-button>
+          <n-button type="primary" @click="handleSave">保存</n-button>
+        </n-flex>
       </template>
     </n-drawer-content>
   </n-drawer>
