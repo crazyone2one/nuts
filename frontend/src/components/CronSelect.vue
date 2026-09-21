@@ -7,10 +7,24 @@ const options = [
   {label: '(每天)', value: '0 0 0 * * ?'},
 ]
 const cron = defineModel<string>('modelValue', {required: true});
+const loading = defineModel<boolean>('loading', {required: false});
+const emit = defineEmits<{
+  (
+      e: 'change',
+      value: string
+  ): void;
+}>();
+const handleUpdateValue = (value: string) => {
+  emit('change', value);
+}
 </script>
 
 <template>
-  <n-select v-model:value="cron" :options="options" :size="size" placeholder="可直接输入表达式"/>
+  <n-select v-model:value="cron" :options="options" :size="size" :loading="loading"
+            tag filterable
+            placeholder="可直接输入表达式"
+            @update:value="handleUpdateValue"
+  />
 </template>
 
 <style scoped>

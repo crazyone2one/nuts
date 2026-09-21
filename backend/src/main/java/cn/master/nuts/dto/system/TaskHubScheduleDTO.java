@@ -1,5 +1,6 @@
 package cn.master.nuts.dto.system;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
@@ -51,6 +52,7 @@ public class TaskHubScheduleDTO implements Serializable {
     private Long lastTime;
 
     @Schema(description = "下次执行时间")
+    @JsonFormat(pattern = "YYYY-MM-DD HH:mm:ss")
     private Long nextTime;
 
     @Schema(description = "任务状态")

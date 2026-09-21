@@ -40,7 +40,8 @@ const columns: DataTableColumns<TaskCenterSystemTaskItem> = [
     title: '状态', key: 'enable', render(record) {
       return h(NSwitch, {
         value: record.enable, size: 'small',
-        disabled: !hasAnyPermission([getCurrentPermission('EDIT')])
+        disabled: !hasAnyPermission([getCurrentPermission('EDIT')]),
+        onUpdateValue: () => handleEnableChange(record)
       });
     }
   },
@@ -48,7 +49,10 @@ const columns: DataTableColumns<TaskCenterSystemTaskItem> = [
   {
     title: '运行规则', key: 'cronExpression', render(record) {
       if (hasAnyPermission([getCurrentPermission('EDIT')])) {
-        return h(CronSelect, {modelValue: record.cronExpression, size: 'small'})
+        return h(CronSelect, {
+          modelValue: record.cronExpression, size: 'small',
+          onChange: (v) => handleRunRuleChange(v, record)
+        })
       }
       return record.cronExpression;
     }
@@ -68,6 +72,24 @@ const columns: DataTableColumns<TaskCenterSystemTaskItem> = [
     }
   },
 ]
+const {send: fetchEnableChange} = useRequest(id => projectTaskApi.projectScheduleSwitch(id), {immediate: false})
+const handleEnableChange = (record: TaskCenterSystemTaskItem) => {
+  fetchEnableChange(record.id).then(() => {
+    window.$message.success(record.enable ? '任务关闭成功' : '任务开启成功');
+    loadList()
+  })
+}
+const handleRunRuleChange = async (value: string, record: TaskCenterSystemTaskItem) => {
+  try {
+    record.runRuleLoading = true;
+    await projectTaskApi.projectEditCron(value, record.id);
+    window.$message.success('更新成功')
+  } catch (error) {
+    console.log(error);
+  } finally {
+    record.runRuleLoading = false;
+  }
+};
 const handleParam = (record: TaskCenterSystemTaskItem) => {
   taskId.value = record.id;
   showParamDrawer.value = true;

@@ -2,7 +2,9 @@ package cn.master.nuts.module.project.controller;
 
 import cn.master.nuts.dto.BasePageRequest;
 import cn.master.nuts.dto.system.ScheduleParamDTO;
+import cn.master.nuts.dto.system.ScheduleRequest;
 import cn.master.nuts.dto.system.TaskHubScheduleDTO;
+import cn.master.nuts.dto.system.TaskParameterRequest;
 import cn.master.nuts.module.log.constants.OperationLogModule;
 import cn.master.nuts.module.system.service.BaseTaskHubService;
 import cn.master.nuts.util.SessionUtils;
@@ -51,5 +53,18 @@ public class ProjectTaskHubController {
     // @RequiresPermissions(PermissionConstants.PROJECT_SCHEDULE_TASK_CENTER_READ_UPDATE)
     public ScheduleParamDTO getParam(@PathVariable String id) {
         return baseTaskHubService.getScheduleParamDTO(id);
+    }
+
+    @PostMapping("/schedule/param")
+    @Operation(summary = "项目-任务中心-保存任务参数")
+    public ScheduleParamDTO updateParam(@Validated @RequestBody TaskParameterRequest request) {
+        return baseTaskHubService.updateScheduleParam(request);
+    }
+
+    @PostMapping("/schedule/update-cron")
+    @Operation(summary = "项目-任务中心-后台任务更新cron表达式")
+    // @RequiresPermissions(PermissionConstants.PROJECT_SCHEDULE_TASK_CENTER_READ_UPDATE)
+    public void updateValue(@Validated @RequestBody ScheduleRequest request) {
+        baseTaskHubService.updateCron(request, SessionUtils.getUserId(), "/project/task-center/schedule/update-cron", OperationLogModule.PROJECT_MANAGEMENT_TASK_CENTER);
     }
 }

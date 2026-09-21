@@ -26,13 +26,15 @@ export type TaskPageRes = PageResult<TaskCenterSystemTaskItem>
 export type TaskQuery = PageQuery<TaskCenterSystemTaskItem>;
 export type editType = Partial<TaskCenterSystemTaskItem>
 
-export interface IJobParam {
-    sensorCode: string
-    beginTime: string
-    endTime: string
-
-    [key: string]: any;
+export type TaskParameterType = 'string' | 'number' | 'boolean';
+export interface TaskParameterItem {
+    label: string;
+    key: string;
+    type: TaskParameterType;
+    value: string | number | boolean;
+    enabled: boolean;
 }
 
-export type editJobParamType = Partial<IJobParam>
-export type TaskParamType = { id: string, config: Partial<IJobParam> }
+export type TaskParameterMap = Record<string, TaskParameterItem>;
+export type editJobParamType = { id: string, parameters: TaskParameterMap }
+export type TaskParamType = { id: string, config: { parameters: TaskParameterMap } }

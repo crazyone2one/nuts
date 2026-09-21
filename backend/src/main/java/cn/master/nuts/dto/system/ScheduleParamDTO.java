@@ -1,6 +1,5 @@
 package cn.master.nuts.dto.system;
 
-import cn.master.nuts.dto.JobParamDTO;
 import lombok.Data;
 
 /**
@@ -10,5 +9,5 @@ import lombok.Data;
 @Data
 public class ScheduleParamDTO {
     private String id;
-    private JobParamDTO config;
+    private TaskParameterConfig config;
 }

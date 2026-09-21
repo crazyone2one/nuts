@@ -11,12 +11,17 @@ import org.quartz.JobExecutionException;
  **/
 public abstract class BaseScheduleJob implements Job {
     protected String projectId;
+    protected String taskId;
+    protected String runConfig;
+
     protected abstract void businessExecute(JobExecutionContext context);
 
     @Override
     public void execute(JobExecutionContext context) throws JobExecutionException {
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
         this.projectId = jobDataMap.getString("projectId");
+        this.taskId = jobDataMap.getString("taskId");
+        this.runConfig = jobDataMap.getString("runConfig");
         businessExecute(context);
     }
 }
