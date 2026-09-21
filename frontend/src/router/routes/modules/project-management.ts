@@ -34,6 +34,16 @@ const ProjectManagement: IAppRouteRecordRaw = {
                 isTopMenu: true,
             },
         },
+        {
+            path: 'taskCenter',
+            name: ProjectManagementRouteEnum.PROJECT_MANAGEMENT_TASK_CENTER,
+            component: () => import('/@/views/project-management/task-center/index.vue'),
+            meta: {
+                locale: '任务中心',
+                roles: ['*'],
+                isTopMenu: true,
+            },
+        },
     ]
 }
 export default ProjectManagement;

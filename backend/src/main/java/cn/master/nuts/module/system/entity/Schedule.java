@@ -1,5 +1,7 @@
 package cn.master.nuts.module.system.entity;
 
+import cn.master.nuts.handler.validation.Created;
+import cn.master.nuts.handler.validation.Updated;
 import com.mybatisflex.annotation.Column;
 import com.mybatisflex.annotation.Id;
 import com.mybatisflex.annotation.Table;
@@ -9,6 +11,8 @@ import java.time.LocalDateTime;
 import java.io.Serial;
 
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -32,7 +36,9 @@ public class Schedule implements Serializable {
     private static final long serialVersionUID = 1L;
 
     @Id
-    @Schema(description = "")
+    @Schema(description = "", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{schedule.id.not_blank}", groups = {Updated.class})
+    @Size(min = 1, max = 50, message = "{schedule.id.length_range}", groups = {Created.class, Updated.class})
     private String id;
 
     /**
@@ -41,28 +47,24 @@ public class Schedule implements Serializable {
     @Schema(description = "qrtz UUID")
     private String key;
 
-    /**
-     * 执行类型 cron
-     */
-    @Schema(description = "执行类型 cron")
+    @Schema(description = "执行类型 cron", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{schedule.type.not_blank}", groups = {Created.class})
+    @Size(min = 1, max = 50, message = "{schedule.type.length_range}", groups = {Created.class, Updated.class})
     private String type;
 
-    /**
-     * cron 表达式
-     */
-    @Schema(description = "cron 表达式")
-    private String value;
+    @Schema(description = "cron 表达式", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{schedule.value.not_blank}", groups = {Created.class})
+    @Size(min = 1, max = 255, message = "{schedule.value.length_range}", groups = {Created.class, Updated.class})
+    private String cronExpression;
 
-    /**
-     * Schedule Job Class Name
-     */
-    @Schema(description = "Schedule Job Class Name")
+    @Schema(description = "Schedule Job Class Name", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{schedule.job.not_blank}", groups = {Created.class})
+    @Size(min = 1, max = 64, message = "{schedule.job.length_range}", groups = {Created.class, Updated.class})
     private String job;
 
-    /**
-     * 资源类型 API_IMPORT,API_SCENARIO,UI_SCENARIO,LOAD_TEST,TEST_PLAN,CLEAN_REPORT,BUG_SYNC
-     */
-    @Schema(description = "资源类型 API_IMPORT,API_SCENARIO,UI_SCENARIO,LOAD_TEST,TEST_PLAN,CLEAN_REPORT,BUG_SYNC")
+    @Schema(description = "资源类型 API/TESL_PLAN", requiredMode = Schema.RequiredMode.REQUIRED)
+    @NotBlank(message = "{schedule.resource_type.not_blank}", groups = {Created.class})
+    @Size(min = 1, max = 50, message = "{schedule.resource_type.length_range}", groups = {Created.class, Updated.class})
     private String resourceType;
 
     /**
@@ -115,4 +117,6 @@ public class Schedule implements Serializable {
     @Schema(description = "配置")
     private String config;
 
+    @Schema(description = "业务ID")
+    private Long num;
 }

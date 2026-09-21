@@ -34,7 +34,7 @@ const columns: DataTableColumns<DataSourceItem> = [
   {title: '超时时间 (ms）', key: 'timeout'},
   {
     title: '操作', key: 'operation', fixed: 'right', width: 170, render(row) {
-      return h('div', {class:'flex flex-row flex-nowrap items-center'}, {
+      return h('div', {class: 'flex flex-row flex-nowrap items-center'}, {
         default: () => [
           h(NButton, {text: true, class: '!mr-0', onClick: () => handleCopy(row)}, {default: () => '复制'}),
           h(NDivider, {vertical: true}),
@@ -51,7 +51,11 @@ const columns: DataTableColumns<DataSourceItem> = [
 <template>
   <div>
     <div class="flex items-center justify-between">
-      <n-button v-permission="['PROJECT_ENVIRONMENT:READ+UPDATE']" @click="handleAdd">添加数据源</n-button>
+      <n-button v-permission="['PROJECT_ENVIRONMENT:READ+UPDATE']"
+                :disabled="innerParam.length>0"
+                @click="handleAdd">
+        添加数据源
+      </n-button>
       <div>
         <n-input placeholder="通过名称搜索" class="w-[240px]"/>
       </div>

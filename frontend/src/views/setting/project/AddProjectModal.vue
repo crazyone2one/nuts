@@ -87,7 +87,7 @@ watchEffect(() => {
       <span v-else>创建项目</span>
     </template>
     <div class="form">
-      <n-form ref="formRef" :model="form" :rules="rules">
+      <n-form ref="formRef" :model="form" :rule="rules">
         <n-form-item path="name" label="项目名称">
           <n-input v-model:value="form.name" :maxlength="255" placeholder="请输入项目名称，不可与其他项目名称重复"/>
         </n-form-item>
