@@ -39,6 +39,7 @@ export const useLeaveUnSaveTip = (leaveProp = leaveProps) => {
             openUnsavedTip(next);
         } else {
             next();
+            // return;
         }
     });
 

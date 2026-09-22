@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import {type DataTableColumns, NButton, NFlex, NSwitch} from "naive-ui";
-import type {TaskCenterSystemTaskItem} from "/@/types/task-center.ts";
+import {type DataTableColumns, NButton, NFlex, NSwitch, NTag} from "naive-ui";
+import type {editType, TaskCenterSystemTaskItem} from "/@/types/task-center.ts";
 import {usePagination, useRequest} from "alova/client";
 import {projectTaskApi} from "/@/api/methods/task-center/project.ts";
 import {systemTaskApi} from "/@/api/methods/task-center/system.ts";
@@ -8,6 +8,7 @@ import AddScheduleModal from "/@/views/task-center/components/AddScheduleModal.v
 import {hasAnyPermission} from "/@/utils/permission.ts";
 import CronSelect from "/@/components/CronSelect.vue";
 import EditParam from "/@/views/task-center/components/EditParam.vue";
+
 
 const props = defineProps<{
   type: 'system' | 'org' | 'project';
@@ -17,6 +18,17 @@ const keyword = ref('')
 const taskId = ref('')
 const showAdd = ref(false)
 const showParamDrawer = ref(false)
+const currentUpdateSchedule = ref<editType>();
+const resourceTypeTag = computed<Record<string, { label: string, type: 'info' | 'success' | 'warning' }>>(() => {
+  return {
+    aqjk: {label: '安全监控', type: 'info'},
+    ky: {label: '矿压', type: 'warning'},
+    shfz: {label: '水害防治', type: 'success'},
+    wkk: {label: '尾矿库', type: 'success'},
+    GNSS: {label: 'GNSS', type: 'success'},
+    other: {label: '其他', type: 'info'},
+  }
+});
 const getCurrentPermission = (action: 'DELETE' | 'EDIT') => {
   return {
     system: {
@@ -45,7 +57,16 @@ const columns: DataTableColumns<TaskCenterSystemTaskItem> = [
       });
     }
   },
-  {title: '类型', key: 'resourceType'},
+  {
+    title: '类型', key: 'resourceType', render(record) {
+      return h(NTag, {
+            bordered: false,
+            type: resourceTypeTag.value[record.resourceType]?.type,
+            size: 'small'
+          },
+          {default: () => '-'})
+    }
+  },
   {
     title: '运行规则', key: 'cronExpression', render(record) {
       if (hasAnyPermission([getCurrentPermission('EDIT')])) {
@@ -65,6 +86,7 @@ const columns: DataTableColumns<TaskCenterSystemTaskItem> = [
         default: () => {
           return [
             h(NButton, {text: true, onClick: () => deleteTask(record)}, {default: () => '删除'}),
+            h(NButton, {text: true, disabled: true, onClick: () => handleEdit(record)}, {default: () => '编辑'}),
             h(NButton, {text: true, onClick: () => handleParam(record)}, {default: () => '参数'})
           ]
         }
@@ -72,6 +94,10 @@ const columns: DataTableColumns<TaskCenterSystemTaskItem> = [
     }
   },
 ]
+const handleEdit = (record: TaskCenterSystemTaskItem) => {
+  currentUpdateSchedule.value = record
+  showAdd.value = true
+}
 const {send: fetchEnableChange} = useRequest(id => projectTaskApi.projectScheduleSwitch(id), {immediate: false})
 const handleEnableChange = (record: TaskCenterSystemTaskItem) => {
   fetchEnableChange(record.id).then(() => {
@@ -129,12 +155,22 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="my-[16px] flex items-center justify-end">
-    <n-button @click="showAdd = true">add</n-button>
-    <n-input v-model:value="keyword" placeholder="通过 ID/名称搜索"/>
-  </div>
+
+  <n-flex class="my-[16px]" justify="space-between">
+    <n-button type="primary" text @click="showAdd = true">add</n-button>
+    <n-flex>
+      <div>
+        <n-input v-model:value="keyword" placeholder="通过 ID/名称搜索"/>
+      </div>
+      <n-button type="primary" text>
+        <template #icon>
+          <span class="i-mdi:refresh-circle "/>
+        </template>
+      </n-button>
+    </n-flex>
+  </n-flex>
   <n-data-table :columns="columns" :data="data"/>
-  <add-schedule-modal v-model:show-modal="showAdd"/>
+  <add-schedule-modal v-model:show-modal="showAdd" :current-schedule="currentUpdateSchedule"/>
   <edit-param v-model:active="showParamDrawer" :id="taskId"/>
 </template>
 

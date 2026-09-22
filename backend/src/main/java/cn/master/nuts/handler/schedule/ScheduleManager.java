@@ -3,8 +3,10 @@ package cn.master.nuts.handler.schedule;
 import cn.master.nuts.dto.system.TaskParameterConfig;
 import cn.master.nuts.dto.system.TaskParameterItem;
 import cn.master.nuts.handler.exception.NSException;
+import cn.master.nuts.module.system.entity.Project;
 import cn.master.nuts.module.system.entity.Schedule;
 import cn.master.nuts.util.JSON;
+import com.mybatisflex.core.query.QueryChain;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.quartz.*;
@@ -133,11 +135,13 @@ public class ScheduleManager {
         }
         JobDataMap jobDataMap = new JobDataMap();
         jobDataMap.put("taskId", schedule.getId());
-        jobDataMap.put("expression", expression);
-        jobDataMap.put("userId", userId);
-        jobDataMap.put("config", schedule.getConfig());
+        // jobDataMap.put("expression", expression);
+        // jobDataMap.put("userId", userId);
         jobDataMap.put("projectId", schedule.getProjectId());
-        jobDataMap.put("runConfig", JSON.toJSONString(map));
+        jobDataMap.put("config", JSON.toJSONString(map));
+
+        Project project = QueryChain.of(Project.class).where(Project::getId).eq(schedule.getProjectId()).one();
+        jobDataMap.put("projectNum", project.getNum());
         return jobDataMap;
     }
 

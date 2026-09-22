@@ -130,7 +130,10 @@ const columns: DataTableColumns<TaskParameterItem> = [
   },
   {
     title: '操作', key: 'operation', render(_, index) {
-      return h(NButton, {onClick: () => removeParameter(index), size: 'small'}, {default: () => '删除'})
+      return h(NButton, {
+        onClick: () => removeParameter(index),
+        text:true
+      }, {default: () => h("span", {class: 'i-carbon:misuse-outline'})})
     }
   }
 ]

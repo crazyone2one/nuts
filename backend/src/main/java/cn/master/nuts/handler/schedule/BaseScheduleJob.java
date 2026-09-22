@@ -11,8 +11,11 @@ import org.quartz.JobExecutionException;
  **/
 public abstract class BaseScheduleJob implements Job {
     protected String projectId;
+    protected String projectNum;
     protected String taskId;
-    protected String runConfig;
+    protected String config;
+    // 文件协议类型-- 0-国家局 1-省局 2-自治区 3-other
+    protected String fileProtocolType;
 
     protected abstract void businessExecute(JobExecutionContext context);
 
@@ -20,8 +23,10 @@ public abstract class BaseScheduleJob implements Job {
     public void execute(JobExecutionContext context) throws JobExecutionException {
         JobDataMap jobDataMap = context.getJobDetail().getJobDataMap();
         this.projectId = jobDataMap.getString("projectId");
+        this.projectNum = jobDataMap.getString("projectNum");
         this.taskId = jobDataMap.getString("taskId");
-        this.runConfig = jobDataMap.getString("runConfig");
+        this.config = jobDataMap.getString("config");
+        this.fileProtocolType = jobDataMap.getString("fileProtocolType");
         businessExecute(context);
     }
 }

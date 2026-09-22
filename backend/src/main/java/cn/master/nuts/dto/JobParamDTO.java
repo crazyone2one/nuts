@@ -14,6 +14,7 @@ import java.util.Map;
 @Data
 public class JobParamDTO {
     private String sensorCode;
+    private String sensorValue;
     private String beginTime;
     private String endTime;
 
