@@ -5,8 +5,22 @@ spring:
     password: 123456
   devtools:
     add-properties: false
+  quartz:
+    job-store-type: jdbc
+    jdbc:
+      initialize-schema: never
+    properties:
+      org:
+        quartz:
+          scheduler:
+            instanceName: QuartzTaskScheduler
+            instanceId: AUTO
+          threadPool:
+            threadCount: 10
 springdoc:
   api-docs:
     enabled: false
   swagger-ui:
     enabled: false
+jwt:
+  secret: m39WBVtQYn8oWIybAOm7Z6rIKii6JBnjTLodHQg8SNBl1FH/C26KP3GllPwU9EbK

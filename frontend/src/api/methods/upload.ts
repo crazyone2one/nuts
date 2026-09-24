@@ -19,5 +19,5 @@ export const uploadFile = (
         formData.append('request', new Blob([requestData], { type: 'application/json;charset=UTF-8' }));
     }
 
-    return instance.Post(params.url, formData);
+    return instance.Post<string>(params.url, formData);
 }

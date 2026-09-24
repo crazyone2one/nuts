@@ -1,0 +1,14 @@
+package cn.master.nuts.module.system.service;
+
+import com.mybatisflex.core.service.IService;
+import cn.master.nuts.module.system.entity.SystemParameter;
+
+/**
+ * 系统参数 服务层。
+ *
+ * @author 11's papa
+ * @since 2026-09-22
+ */
+public interface SystemParameterService extends IService<SystemParameter> {
+
+}

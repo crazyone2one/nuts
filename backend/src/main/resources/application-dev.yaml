@@ -26,3 +26,7 @@ springdoc:
     enabled: true
 jwt:
   secret: m39WBVtQYn8oWIybAOm7Z6rIKii6JBnjTLodHQg8SNBl1FH/C26KP3GllPwU9EbK
+minio:
+  endpoint: http://172.16.2.19:9000
+  access-key: KLEBHHp8e4eBy98k
+  secret-key: WkkYJ5BlChznyE5wKEYT1O4rcwoUUlaL

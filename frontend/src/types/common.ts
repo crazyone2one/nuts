@@ -3,6 +3,7 @@ export interface PageQuery<T = Record<string, any>> {
     pageSize: number;
     keyword?: string;
     filter?: Partial<T>
+    [key: string]: any;
 }
 
 export interface PageResult<T> {
